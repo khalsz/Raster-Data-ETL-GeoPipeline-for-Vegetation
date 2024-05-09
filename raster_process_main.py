@@ -9,8 +9,8 @@ import tempfile
 
 
 
-canopy_metrics_var_dir = "C:/Users/khalsz/Documents/lidar_data/canopy_metrics"
-rast_files = "C:/Users/khalsz/Documents/lidar_data/raster_file"
+canopy_metrics_var_dir = "C:/Users/khalsz/Documents/CarbonKeepers/lidar_data/canopy_metrics"
+rast_files = "C:/Users/khalsz/Documents/CarbonKeepers/lidar_data/raster_file"
 
 
 def AGB_raster_processor(canopy_metrics_var_dir: str, rast_files_dir: str) -> bool:
