@@ -32,7 +32,7 @@ class RasterFileManager:
     raster_file_dir: str = None
     # initalizing variable list for the ML model
     file_list : list[str] = field(init=False, default_factory =lambda:
-                                    ['agb', '_int_avg', 'ele', '_p75', '_p99', 
+                                    ['agb', 'int', 'ele', '_p75', '_p99', 
                                      '_std', '_kur', '_ske', 'red', 'green',
                                      'blue', 'nir', '_dns'])    
     

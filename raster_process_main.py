@@ -1,16 +1,23 @@
 from file_manager.raster_file_manager import RasterFileManager
 from validator.validate_raster_metadata import validate_raster_properties
 from validator.validate_file import validate_file_list
+from merge.merge_raster import stitch_tiffs_by_pattern
 from os.path import join
+from os.path import dirname
 import os
 import shutil
 from schema.schema_creator import update_schema
 import tempfile
 
 
+canopy_metrics_var_dir = ["C:/Users/khalsz/Documents/CarbonKeepers/lidar_data/drive-download-20240509T134954Z-001/ept_NY5023/ept-data/canopy_metrics", 
+                          "C:/Users/khalsz/Documents/CarbonKeepers/lidar_data/drive-download-20240509T134954Z-001/ept_NY5022/ept-data/canopy_metrics", 
+                          "C:/Users/khalsz/Documents/CarbonKeepers/lidar_data/drive-download-20240509T134954Z-001/ept_NY5122/ept-data/canopy_metrics", 
+                          "C:/Users/khalsz/Documents/CarbonKeepers/lidar_data/drive-download-20240509T134954Z-001/ept_NY5123/ept-data/canopy_metrics"]
 
-canopy_metrics_var_dir = "C:/Users/khalsz/Documents/CarbonKeepers/lidar_data/canopy_metrics"
+# canopy_metrics_var_dir = "C:/Users/khalsz/Documents/CarbonKeepers/lidar_data/canopy_metrics"
 rast_files = "C:/Users/khalsz/Documents/CarbonKeepers/lidar_data/raster_file"
+
 
 
 def AGB_raster_processor(canopy_metrics_var_dir: str, rast_files_dir: str) -> bool:
@@ -44,20 +51,26 @@ def AGB_raster_processor(canopy_metrics_var_dir: str, rast_files_dir: str) -> bo
     # create temporary directory to move all raster files
     with tempfile.TemporaryDirectory() as temp_dir: 
         
-        # creating file instances
-        raster_dir_inst = RasterFileManager(rast_files_dir)
-        lidar_dir_inst = RasterFileManager(canopy_metrics_var_dir)
+        # creating temporary directory file instance
         temp_dir_inst = RasterFileManager(temp_dir)
         
+        # stitching together (by file name pattern) raster files from canopy metrics extrator
+        stiched_rast = stitch_tiffs_by_pattern(dirs = canopy_metrics_var_dir, dest_path=join(dirname(rast_files_dir), 'lidar_raster'))
+        
+        # creating file instances
+        raster_dir_inst = RasterFileManager(rast_files_dir)
+        lidar_dir_inst = RasterFileManager(stiched_rast)
+        
+        
         # updating existing schema with attribute of forest canopy metrics raster variable
-        schema = update_schema(join(canopy_metrics_var_dir, lidar_dir_inst.tif_ext_file()[0]))
+        schema = update_schema(join(lidar_dir_inst.raster_file_dir, lidar_dir_inst.tif_ext_file()[0]))
         
         # copying all other tif file variables to the same location
         raster_dir_inst.copy_files(dest_dir=temp_dir_inst.raster_file_dir)
         lidar_dir_inst.copy_files(dest_dir=temp_dir_inst.raster_file_dir)
         
         # creating raster variable files final destination
-        parent_dir = os.path.dirname(canopy_metrics_var_dir)
+        parent_dir = dirname(lidar_dir_inst.raster_file_dir)
         final_directory = os.path.join(parent_dir, "final_variable")
         if os.path.exists(final_directory): 
             shutil.rmtree(final_directory)
