@@ -25,6 +25,7 @@ def validate_raster_properties(rast_path: str, schema_json: dict):
     raster_files = RasterFileManager(rast_path).tif_ext_file()
     
     for filename in raster_files:   
+        # initializing the value of validation error to be false
         validation_error = False  
            
         try: 
@@ -37,7 +38,7 @@ def validate_raster_properties(rast_path: str, schema_json: dict):
         
         if validation_error: 
              # Project raster if validation error occurs
-            project_raster(tgt_crs=schema_json['coordinate_reference_system'], 
+            project_raster(tgt_crs=schema_json['crs'], 
                             src_rast_file=path_join(rast_path, filename),
                             dst_path=path_join(rast_path, filename))
             

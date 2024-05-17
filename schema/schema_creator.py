@@ -39,8 +39,7 @@ def update_schema (raster_file) -> dict:
     with open(json_schema_file, 'r') as json_file: 
         schema = json.load(json_file)
         
-    # Update schema with CRS and spatial resolution
-    schema['coordinate_reference_system'] = raster_metadata['crs'].to_epsg()
+    # Update schema spatial resolution
     schema['spatial_resolution'] = raster_data.res
 
     # Write updated schema back to JSON file

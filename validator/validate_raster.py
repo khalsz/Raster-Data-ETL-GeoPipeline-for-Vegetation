@@ -22,9 +22,9 @@ def validate_crs(raster_metadata, schema_json, file_name):
     """
     
     # checking of the CRS of the raster file matches the custom defined
-    if raster_metadata['crs'].to_epsg() != schema_json['coordinate_reference_system']: 
+    if (raster_metadata['crs'] is None or raster_metadata['crs'].to_epsg() != schema_json['crs']): 
         raise ValueError(f"ValueError: The raster file {file_name} has a a wrong CRS. "
-                f"Expected CRS:{schema_json['coordinate_reference_system']}, found: {raster_metadata.crs}"
+                f"Expected CRS:{schema_json['crs']}, found: {raster_metadata['crs']}"
                 f"Raster file {file_name} is needs to be projected")
        
 def validate_spatial_resolution(raster_metadata, schema_json, file_name): 

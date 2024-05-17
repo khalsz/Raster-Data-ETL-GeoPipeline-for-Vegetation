@@ -107,7 +107,7 @@ class RasterFileManager:
             for file in files: 
                 src_path = os.path.join(self.raster_file_dir, file)
                 shutil.copy2(src_path, dest_dir)
-                print("successfully copied all raster file in the source directory")
+            print("successfully copied all raster file in the source directory")
         except Exception as e: 
             raise Exception (f"Error copying file: {e}")
         

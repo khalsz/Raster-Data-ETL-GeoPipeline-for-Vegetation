@@ -36,7 +36,10 @@ def project_raster(tgt_crs: int, src_rast_file:str, dst_path: str):
         with rio.open(src_rast_file) as src_rast: 
         
         # extracting source and target raster crs info
-            src_crs = get_crs(src_rast)
+            if src_rast.crs is None: 
+                src_crs = None
+            else: 
+                src_crs = get_crs(src_rast)
         
             if tgt_crs != src_crs:
                 kwargs, transform = transformer(src_rast, tgt_crs)

@@ -8,6 +8,10 @@ import os
 import shutil
 from schema.schema_creator import update_schema
 import tempfile
+import rasterio as rio
+from warper.raster_projector import project_raster
+import json
+from rasterio.crs import CRS
 
 
 canopy_metrics_var_dir = ["C:/Users/khalsz/Documents/CarbonKeepers/lidar_data/drive-download-20240509T134954Z-001/ept_NY5023/ept-data/canopy_metrics", 
@@ -57,11 +61,24 @@ def AGB_raster_processor(canopy_metrics_var_dir: str, rast_files_dir: str) -> bo
         # stitching together (by file name pattern) raster files from canopy metrics extrator
         stiched_rast = stitch_tiffs_by_pattern(dirs = canopy_metrics_var_dir, dest_path=join(dirname(rast_files_dir), 'lidar_raster'))
         
-        # creating file instances
+        # creating file class instances
         raster_dir_inst = RasterFileManager(rast_files_dir)
         lidar_dir_inst = RasterFileManager(stiched_rast)
+        lidar_raster_dir = lidar_dir_inst.tif_ext_file()
         
+        # initializing json file path
+        json_schema_file = os.path.abspath(os.path.join("schema", "json_schema.json"))
         
+        with open(json_schema_file, 'r') as json_file: 
+            schema = json.load(json_file)
+            
+        # assigning CRS attribute for raster files with None CRS value    
+        for file_name in lidar_raster_dir: 
+            file_path = join(lidar_dir_inst.raster_file_dir, file_name)
+            with rio.open(file_path, 'r+') as lid_rast:
+                if lid_rast.crs is None: 
+                    lid_rast.crs = CRS.from_epsg(schema['crs'])
+                  
         # updating existing schema with attribute of forest canopy metrics raster variable
         schema = update_schema(join(lidar_dir_inst.raster_file_dir, lidar_dir_inst.tif_ext_file()[0]))
         

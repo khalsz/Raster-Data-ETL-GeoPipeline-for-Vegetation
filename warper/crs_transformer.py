@@ -74,9 +74,10 @@ def reprojector (src_rst:rasterio.io.DatasetReader, kwargs: dict, tgt_transform,
     try: 
     # Perform reprojection
         data, _ = reproject(
-            source=src_rst,
+            source=src_rst.read(),
             destination=np.zeros((src_rst.count, kwargs['height'], kwargs['width'])),
             src_transform=src_rst.transform, 
+            src_crs=src_rst.crs,
             dst_transform=tgt_transform,
             dst_crs=tgt_crs,
             dst_nodata=src_rst.nodata,
