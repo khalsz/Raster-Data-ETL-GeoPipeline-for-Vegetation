@@ -5,9 +5,9 @@ The Raster Data ETL GeoPipeline for Vegetation an ETL (Extract, Transform, Load)
 
 
 ## Features
-**Raster File Management**: The application includes a RasterFileManager class for managing raster files. It provides methods for listing, moving, and copying raster files.
-**Data Validation**: The application offers data validation capabilities to ensure that raster files meet specific criteria defined by a JSON schema. It validates properties such as coordinate reference system (CRS), spatial resolution, and band count.
-**Data Processing**: The application provides functions for processing raster files, including resampling, reprojection, and schema updates.
+   **Raster File Management**: The application includes a RasterFileManager class for managing raster files. It provides methods for listing, moving, and copying raster files.
+   **Data Validation**: The application offers data validation capabilities to ensure that raster files meet specific criteria defined by a JSON schema. It validates properties such as coordinate reference system (CRS), spatial resolution, and band count.
+   **Data Processing**: The application provides functions for processing raster files, including resampling, reprojection, and schema updates.
 
 ## Project Structure:
 The project consists of several components organized into modules:
