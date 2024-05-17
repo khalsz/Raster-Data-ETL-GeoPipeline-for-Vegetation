@@ -72,10 +72,11 @@ def AGB_raster_processor(canopy_metrics_var_dir: str, rast_files_dir: str) -> bo
         with open(json_schema_file, 'r') as json_file: 
             schema = json.load(json_file)
             
-        # assigning CRS attribute for raster files with None CRS value    
+            
         for file_name in lidar_raster_dir: 
             file_path = join(lidar_dir_inst.raster_file_dir, file_name)
             with rio.open(file_path, 'r+') as lid_rast:
+                # assigning CRS attribute for raster files with None CRS value
                 if lid_rast.crs is None: 
                     lid_rast.crs = CRS.from_epsg(schema['crs'])
                   
